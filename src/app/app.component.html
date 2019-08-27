@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <form class="pt-3" *ngIf="step === 0">
+    <div class="form-group row">
+      <label for="nbPlayers" class="col-4 col-form-label">Combien de joueur ?</label>
+      <div class="col-2">
+        <input type="number" min="3" max="8" [(ngModel)]="nbPlayers" class="form-control" id="nbPlayers"
+               name="nbPlayers">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <button type="button" class="btn btn-outline-primary" (click)="nbPlayerValidate()">Valider</button>
+      </div>
+    </div>
+  </form>
+
+  <div *ngIf="step === 1">
+    <div class="form-group row" *ngFor="let player of players; let i = index;">
+      <label class="col-4 col-form-label">Nom jou·eur·euse {{i+1}} :</label>
+      <div class="col-8">
+        <input type="text" class="form-control" [(ngModel)]="player.name">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <button type="button" class="btn btn-outline-primary" (click)="startParty()">Valider</button>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="step === 2">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-4">Tour {{nbRound}}</div>
+      </div>
+
+      <div class="row">
+        <div class="col-4">Nom</div>
+        <div class="col-4">Score manche</div>
+        <div class="col-4">Score total</div>
+      </div>
+
+      <div class="row mt-2" *ngFor="let player of players">
+        <div class="col-4">{{player.name}}</div>
+        <div class="col-2">
+          <input type="number" min="0" max="250" class="form-control" [(ngModel)]="player.currentScore">
+        </div>
+        <div class="col-2">{{player.scoreTotal}}</div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-4 offset-4"
+             [ngClass]="{'text-red': getTotalCurrentScores() !== 250, 'text-green': getTotalCurrentScores() === 250}">
+          {{getTotalCurrentScores()}}
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-4 offset-4">
+          <button type="button" class="btn btn-primary"
+                  [ngClass]="{'disabled': getTotalCurrentScores() !== 250}"
+                  (click)="validateRound()">
+            Valider manche
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="step === 3">
+    Terminé !!!
+    <div class="col-12">
+      <div class="row" *ngFor="let player of players; let i = index;">
+        <div class="col-2">
+          {{i === 0 ? '1er': i+1 + 'ème'}}
+        </div>
+
+        <div class="col-4">{{player.name}}</div>
+
+        <div class="col-4">{{player.scoreTotal}}</div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <button type="button" class="btn btn-primary" (click)="restart()">
+        Recommencer
+      </button>
+    </div>
+  </div>
+</div>
